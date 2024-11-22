@@ -19,10 +19,10 @@ const FormSchema = z.object({
   name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  income: z.string().min(2, {
+  type: z.string().min(2, {
     message: "Income must be at least 2 characters.",
   }),
-  expense: z.string().min(2, {
+  amount: z.string().min(2, {
     message: "Expense must be at least 2 characters.",
   }),
 });
@@ -32,16 +32,16 @@ export function TransactionForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
-      income: "",
-      expense: "",
+      type: "",
+      amount: "",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("income", data.income);
-    formData.append("expense", data.expense);
+    formData.append("type", data.type);
+    formData.append("amount", data.amount);
     createTransactions(formData);
   }
 
@@ -53,7 +53,7 @@ export function TransactionForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -63,10 +63,10 @@ export function TransactionForm() {
         />
         <FormField
           control={form.control}
-          name="income"
+          name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>income</FormLabel>
+              <FormLabel>Type</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -76,10 +76,10 @@ export function TransactionForm() {
         />
         <FormField
           control={form.control}
-          name="expense"
+          name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>expense</FormLabel>
+              <FormLabel>Amount</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -87,7 +87,10 @@ export function TransactionForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+
+        <Button type="submit" className="w-full">
+          Submit
+        </Button>
       </form>
     </Form>
   );

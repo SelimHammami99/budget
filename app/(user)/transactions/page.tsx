@@ -1,8 +1,22 @@
 import { TransactionForm } from "@/components/TransactionForm";
+import { Button } from "@/components/ui/button";
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import { Plus } from "lucide-react";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { DataTable } from "@/components/TransactionsTable";
+import { transactionsColumns } from "@/lib/transactionsColumns";
 
 export default async function Page() {
   const { userId }: { userId: string | null } = await auth();
@@ -13,12 +27,39 @@ export default async function Page() {
     .select()
     .from(transactions)
     .where(eq(transactions.userId, userId));
+  console.log({ userTransactions });
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className="font-bold text-xl tracking-tighter">your transactions</h1>
+      <div className="flex flex-row items-center w-full justify-center gap-5">
+        <h1 className="font-bold text-xl tracking-tighter">
+          your transactions
+        </h1>
 
-      <TransactionForm />
+        <Drawer>
+          <DrawerTrigger>
+            <Button variant={"outline"} size={"icon"}>
+              <Plus size={24} />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <div className="mx-auto w-full max-w-xl">
+              <DrawerHeader>
+                <DrawerTitle>Add a new transaction</DrawerTitle>
+              </DrawerHeader>
+              <DrawerFooter className="flex justify-center items-center">
+                <TransactionForm />
+                <DrawerClose>
+                  <Button variant="outline">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </div>
+      <div className="w-full mt-5">
+        <DataTable columns={transactionsColumns} data={userTransactions} />
+      </div>
     </div>
   );
 }

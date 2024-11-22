@@ -8,8 +8,8 @@ export async function createTransactions(formData: FormData) {
   const { userId }: { userId: string | null } = await auth();
   const transaction = {
     name: formData.get("name") as string,
-    income: formData.get("income") as string,
-    expense: formData.get("expense") as string,
+    type: formData.get("type") as string,
+    amount: formData.get("amount") as string,
     userId,
   };
 
