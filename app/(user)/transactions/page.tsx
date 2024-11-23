@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/drawer";
 import { DataTable } from "@/components/TransactionsTable";
 import { transactionsColumns } from "@/lib/transactionsColumns";
+import GridExample from "@/components/Table";
 
 export default async function Page() {
   const { userId }: { userId: string | null } = await auth();
@@ -57,8 +58,9 @@ export default async function Page() {
           </DrawerContent>
         </Drawer>
       </div>
-      <div className="w-full mt-5">
+      <div className="mt-5 w-full">
         <DataTable columns={transactionsColumns} data={userTransactions} />
+        {/* <GridExample data={userTransactions} /> */}
       </div>
     </div>
   );
