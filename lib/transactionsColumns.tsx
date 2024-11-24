@@ -10,6 +10,7 @@ export type Transaction = {
   name: string;
   type: string;
   amount: string;
+  description: string;
 };
 
 export const transactionsColumns: ColumnDef<Transaction>[] = [
@@ -22,6 +23,20 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "description",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Description
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -70,7 +85,7 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
             }`,
           }}
         >
-          {row.original.type.toLowerCase() === "expense" ? "-" : "+"}
+          {row.original.type.toLowerCase() === "expense" ? "- " : "+ "}
           {formatted}
         </Badge>
       );

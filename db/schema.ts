@@ -5,5 +5,6 @@ export const transactions = pgTable("transactions", {
   name: text("name"),
   type: text("type"),
   amount: varchar("amount", { length: 256 }),
+  description: text("description"),
   userId: varchar("user_id"),
 });

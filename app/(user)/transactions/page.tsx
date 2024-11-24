@@ -26,7 +26,6 @@ export default async function Page() {
     .select()
     .from(transactions)
     .where(eq(transactions.userId, userId));
-  console.log({ userTransactions });
 
   return (
     <div className="flex flex-col justify-center items-center">
