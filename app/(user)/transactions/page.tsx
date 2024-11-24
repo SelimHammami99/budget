@@ -7,7 +7,6 @@ import { eq } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
@@ -44,10 +43,7 @@ export default async function Page() {
                 <DrawerTitle>Add a new transaction</DrawerTitle>
               </DrawerHeader>
               <DrawerFooter className="flex justify-center items-center">
-                <TransactionForm />
-                <DrawerClose>
-                  <Button variant="outline">Cancel</Button>
-                </DrawerClose>
+                <TransactionForm transactions={userTransactions} />
               </DrawerFooter>
             </div>
           </DrawerContent>
