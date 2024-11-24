@@ -31,6 +31,7 @@ import {
 } from "./ui/select";
 import { getTypes } from "@/helpers/getTypes";
 import { Button } from "./ui/button";
+import { XIcon } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -61,50 +62,72 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      {/* <div className="flex items-center py-4 gap-4">
-        <Input
-          placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Select
-          onValueChange={(value) => {
-            if (value === "All")
-              table.getColumn("type")?.setFilterValue(getTypes(data));
-            else {
-              table.getColumn("type")?.setFilterValue(value);
+      <div className="flex items-center py-4 gap-4">
+        <div className="flex flex-row gap-2 w-full">
+          <Input
+            placeholder="Filter names..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
-          }}
-          defaultValue={
-            (table.getColumn("type")?.getFilterValue() as string) ?? ""
-          }
-        >
-          <SelectTrigger className="text-white/70">
-            <SelectValue placeholder="Filter type..." />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="All">All</SelectItem>
-              {getTypes(data).map((type) => (
-                <SelectItem value={type} key={type}>
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Input
-          placeholder="Filter amount..."
-          value={(table.getColumn("amount")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("amount")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div> */}
+            className="max-w-sm"
+          />
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => table.getColumn("name")?.setFilterValue("")}
+          >
+            <XIcon size={24} />
+          </Button>
+        </div>
+        <div className="flex flex-row gap-2 w-full">
+          <Select
+            onValueChange={(value) =>
+              table.getColumn("type")?.setFilterValue(value)
+            }
+            value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Filter type..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {getTypes(data).map((type) => (
+                  <SelectItem value={type} key={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => table.getColumn("type")?.setFilterValue("")}
+          >
+            <XIcon size={24} />
+          </Button>
+        </div>
+        <div className="flex flex-row gap-2 w-full">
+          <Input
+            placeholder="Filter amount..."
+            value={
+              (table.getColumn("amount")?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn("amount")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => table.getColumn("amount")?.setFilterValue("")}
+          >
+            <XIcon size={24} />
+          </Button>
+        </div>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

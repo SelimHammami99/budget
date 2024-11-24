@@ -9,7 +9,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -17,7 +16,6 @@ import {
 } from "@/components/ui/drawer";
 import { DataTable } from "@/components/TransactionsTable";
 import { transactionsColumns } from "@/lib/transactionsColumns";
-import GridExample from "@/components/Table";
 
 export default async function Page() {
   const { userId }: { userId: string | null } = await auth();
@@ -33,9 +31,7 @@ export default async function Page() {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row items-center w-full justify-center gap-5">
-        <h1 className="font-bold text-xl tracking-tighter">
-          your transactions
-        </h1>
+        <h1 className="font-bold text-xl tracking-tighter">Transactions</h1>
 
         <Drawer>
           <DrawerTrigger>
@@ -60,7 +56,6 @@ export default async function Page() {
       </div>
       <div className="mt-5 w-full">
         <DataTable columns={transactionsColumns} data={userTransactions} />
-        {/* <GridExample data={userTransactions} /> */}
       </div>
     </div>
   );
