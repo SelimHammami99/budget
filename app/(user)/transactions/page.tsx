@@ -9,7 +9,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -32,9 +31,7 @@ export default async function Page() {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row items-center w-full justify-center gap-5">
-        <h1 className="font-bold text-xl tracking-tighter">
-          your transactions
-        </h1>
+        <h1 className="font-bold text-xl tracking-tighter">Transactions</h1>
 
         <Drawer>
           <DrawerTrigger>
@@ -57,7 +54,7 @@ export default async function Page() {
           </DrawerContent>
         </Drawer>
       </div>
-      <div className="w-full mt-5">
+      <div className="mt-5 w-full">
         <DataTable columns={transactionsColumns} data={userTransactions} />
       </div>
     </div>
