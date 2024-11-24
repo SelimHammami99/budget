@@ -81,6 +81,25 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
         <div className="flex flex-row gap-2 w-full">
+          <Input
+            placeholder="Filter description..."
+            value={
+              (table.getColumn("description")?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn("description")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => table.getColumn("description")?.setFilterValue("")}
+          >
+            <XIcon size={24} />
+          </Button>
+        </div>
+        <div className="flex flex-row gap-2 w-full">
           <Select
             onValueChange={(value) =>
               table.getColumn("type")?.setFilterValue(value)
