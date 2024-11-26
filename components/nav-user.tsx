@@ -1,12 +1,14 @@
 "use client";
 
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
+  CircleUserRound,
   CreditCard,
+  Laptop,
   LogOut,
-  Sparkles,
+  Monitor,
+  Moon,
+  Sun,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,7 +27,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { useTheme } from "next-themes";
+import { Button } from "./ui/button";
 
 export function NavUser({
   name,
@@ -37,6 +41,8 @@ export function NavUser({
   avatar: string | null;
 }) {
   const { isMobile } = useSidebar();
+  const { setTheme, theme } = useTheme();
+  console.log(theme);
 
   return (
     <SidebarMenu>
@@ -83,25 +89,15 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <CircleUserRound />
+                Profile
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
                 Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -113,6 +109,42 @@ export function NavUser({
                 </div>
               </SignOutButton>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-xs text-gray-500">
+              Preferences
+            </DropdownMenuLabel>
+            <div className="flex flex-row items-center justify-between relative cursor-default select-none gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
+              <div>Theme</div>
+              <div className="flex flex-row items-center justify-evenly py-1.5 px-1 border rounded-full ">
+                <Button
+                  variant={"ghost"}
+                  onClick={() => setTheme("system")}
+                  className={`w-2 h-2 ${
+                    theme === "system" ? "text-black" : "text-gray-400"
+                  }`}
+                >
+                  <Laptop />
+                </Button>
+                <Button
+                  onClick={() => setTheme("light")}
+                  variant={"ghost"}
+                  className={`w-2 h-2 ${
+                    theme === "light" ? "text-black" : "text-gray-400"
+                  }`}
+                >
+                  <Sun />
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  onClick={() => setTheme("dark")}
+                  className={`w-2 h-2 ${
+                    theme === "dark" ? "text-black" : "text-gray-400"
+                  } dark:${theme === "dark" ? "text-white" : "text-gray-500"}`}
+                >
+                  <Moon />
+                </Button>
+              </div>
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
