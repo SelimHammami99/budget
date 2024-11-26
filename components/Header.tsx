@@ -13,11 +13,7 @@ const Header = () => {
           budget
         </Link>
       </div>
-      <div className="flex flex-row gap-10 font-bold text-lg tracking-tighter text-white">
-        <Link href={"/transactions"}>transactions</Link>
-        <Link href={"/budgets"}>budgets</Link>
-        <Link href={"/reports"}>reports/insights</Link>
-      </div>
+
       <div className="flex flex-row gap-5">
         <SignedOut>
           <SignInButton />
