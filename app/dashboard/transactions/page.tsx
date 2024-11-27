@@ -15,8 +15,6 @@ import {
 } from "@/components/ui/drawer";
 import { DataTable } from "@/components/TransactionsTable";
 import { transactionsColumns } from "@/lib/transactionsColumns";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
 
 export default async function Page() {
   const { userId }: { userId: string | null } = await auth();
