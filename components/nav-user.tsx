@@ -4,9 +4,7 @@ import {
   ChevronsUpDown,
   CircleUserRound,
   CreditCard,
-  Laptop,
   LogOut,
-  Monitor,
   Moon,
   Sun,
 } from "lucide-react";
@@ -27,9 +25,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
+import { redirect } from "next/navigation";
 
 export function NavUser({
   name,
@@ -42,7 +41,6 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const { setTheme, theme } = useTheme();
-  console.log(theme);
 
   return (
     <SidebarMenu>
@@ -91,17 +89,22 @@ export function NavUser({
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CircleUserRound />
-                Profile
+              <DropdownMenuItem className="cursor-pointer">
+                <div
+                  onClick={() => redirect("/dashboard/profile")}
+                  className="flex flex-row items-center gap-2 w-full"
+                >
+                  <CircleUserRound />
+                  Profile
+                </div>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <SignOutButton>
                 <div className="flex flex-row items-center justify-center gap-2">
                   <LogOut />
@@ -115,32 +118,29 @@ export function NavUser({
             </DropdownMenuLabel>
             <div className="flex flex-row items-center justify-between relative cursor-default select-none gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
               <div>Theme</div>
-              <div className="flex flex-row items-center justify-evenly py-1.5 px-1 border rounded-full ">
+              <div className="flex gap-x-1.5 rounded-full bg-gray-600/5 p-1 ring-1 ring-gray-600/5 light:ring-inset dark:bg-black/30 dark:ring-white/5">
                 <Button
                   variant={"ghost"}
-                  onClick={() => setTheme("system")}
-                  className={`w-2 h-2 ${
-                    theme === "system" ? "text-black" : "text-gray-400"
-                  }`}
-                >
-                  <Laptop />
-                </Button>
-                <Button
                   onClick={() => setTheme("light")}
-                  variant={"ghost"}
-                  className={`w-2 h-2 ${
-                    theme === "light" ? "text-black" : "text-gray-400"
+                  className={`${
+                    theme === "light"
+                      ? "data-[focus-visible]:outline-focus relative size-5 flex-none rounded-full outline-none transition-colors bg-white text-gray-800 shadow-[0_1px_5px_-4px_rgba(19,19,22,0.4),0_2px_5px_rgba(34,42,53,0.06)] ring-1 ring-gray-900/10 dark:bg-gray-800 dark:text-gray-300 dark:ring-white/20"
+                      : "data-[focus-visible]:outline-focus relative size-5 flex-none rounded-full outline-none transition-colors "
                   }`}
                 >
+                  <span className="absolute inset-[calc(-3/16*1rem)]"></span>
                   <Sun />
                 </Button>
                 <Button
-                  variant={"ghost"}
                   onClick={() => setTheme("dark")}
-                  className={`w-2 h-2 ${
-                    theme === "dark" ? "text-black" : "text-gray-400"
-                  } dark:${theme === "dark" ? "text-white" : "text-gray-500"}`}
+                  variant={"ghost"}
+                  className={`${
+                    theme === "dark"
+                      ? "data-[focus-visible]:outline-focus relative size-5 flex-none rounded-full outline-none transition-colors bg-white text-gray-800 shadow-[0_1px_5px_-4px_rgba(19,19,22,0.4),0_2px_5px_rgba(34,42,53,0.06)] ring-1 ring-gray-900/10 dark:bg-gray-800 dark:text-gray-300 dark:ring-white/20"
+                      : "data-[focus-visible]:outline-focus relative size-5 flex-none rounded-full outline-none transition-colors "
+                  }`}
                 >
+                  <span className="absolute inset-[calc(-3/16*1rem)]"></span>
                   <Moon />
                 </Button>
               </div>

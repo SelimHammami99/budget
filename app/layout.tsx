@@ -24,7 +24,7 @@ export default function RootLayout({
         <body className={clsx(dmSans.className, "antialiased")}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
