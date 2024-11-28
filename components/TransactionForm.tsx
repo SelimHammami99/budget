@@ -22,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { getTypes } from "@/helpers/getTypes";
 import { Minus, Plus } from "lucide-react";
 import { DrawerClose } from "./ui/drawer";
 
@@ -41,8 +40,20 @@ const FormSchema = z.object({
   }),
 });
 
-export function TransactionForm({ transactions }: { transactions: any[] }) {
-  const [chosenAmount, setChosenAmount] = React.useState(0);
+interface Transaction {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  amount: number;
+}
+
+export function TransactionForm({
+  transactions,
+}: {
+  transactions: Transaction[];
+}) {
+  const [chosenAmount, setChosenAmount] = React.useState(10);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -63,7 +74,7 @@ export function TransactionForm({ transactions }: { transactions: any[] }) {
   }
 
   function onClick(adjustment: number) {
-    setChosenAmount(Math.max(0, Math.min(10000, chosenAmount + adjustment)));
+    setChosenAmount(Math.max(10, Math.min(10000, chosenAmount + adjustment)));
   }
 
   return (
@@ -108,11 +119,12 @@ export function TransactionForm({ transactions }: { transactions: any[] }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getTypes(transactions).map((type) => (
-                    <SelectItem value={type} key={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value={"Expense"} key={"Expense"}>
+                    Expense
+                  </SelectItem>
+                  <SelectItem value={"Income"} key={"Income"}>
+                    Income
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -126,7 +138,6 @@ export function TransactionForm({ transactions }: { transactions: any[] }) {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                {/* <Input {...field} /> */}
                 <div className="p-4 pb-0">
                   <div className="flex items-center justify-center space-x-2">
                     <Button
@@ -134,7 +145,7 @@ export function TransactionForm({ transactions }: { transactions: any[] }) {
                       size="icon"
                       className="h-8 w-8 shrink-0 rounded-full"
                       onClick={() => onClick(-10)}
-                      disabled={chosenAmount <= 0}
+                      disabled={chosenAmount <= 10}
                       type="button"
                     >
                       <Minus />
