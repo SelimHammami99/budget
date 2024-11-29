@@ -6,6 +6,7 @@ import {
   CreditCard,
   LogOut,
   Moon,
+  Settings,
   Sun,
 } from "lucide-react";
 
@@ -101,6 +102,15 @@ export function NavUser({
               <DropdownMenuItem disabled>
                 <CreditCard />
                 Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <div
+                  onClick={() => redirect("/dashboard/settings")}
+                  className="flex flex-row items-center gap-2 w-full"
+                >
+                  <Settings />
+                  Settings
+                </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

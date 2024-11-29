@@ -193,7 +193,6 @@ const items = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded || !isSignedIn) return null;
-  console.log({ user });
 
   return (
     <Sidebar collapsible="icon" {...props}>

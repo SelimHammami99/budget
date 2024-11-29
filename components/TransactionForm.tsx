@@ -24,6 +24,9 @@ import {
 } from "./ui/select";
 import { Minus, Plus } from "lucide-react";
 import { DrawerClose } from "./ui/drawer";
+import useCurrencyStore from "@/store/useCurrencyStore";
+import { currencies } from "@/lib/currencies";
+import { getCurrencySymbol } from "@/helpers/getCurrencySymbol";
 
 const FormSchema = z.object({
   name: z.string({
@@ -40,19 +43,8 @@ const FormSchema = z.object({
   }),
 });
 
-interface Transaction {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-  amount: number;
-}
-
-export function TransactionForm({
-  transactions,
-}: {
-  transactions: Transaction[];
-}) {
+export function TransactionForm() {
+  const { currency } = useCurrencyStore();
   const [chosenAmount, setChosenAmount] = React.useState(10);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -153,7 +145,7 @@ export function TransactionForm({
                     </Button>
                     <div className="flex-1 text-center">
                       <div className="text-6xl font-bold tracking-tighter">
-                        {chosenAmount} €
+                        {chosenAmount} {getCurrencySymbol(currency, currencies)}
                       </div>
                     </div>
                     <Button

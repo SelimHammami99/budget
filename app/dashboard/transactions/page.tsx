@@ -14,6 +14,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { DataTable } from "@/components/TransactionsTable";
+import { Separator } from "@/components/ui/separator";
 import { transactionsColumns } from "@/lib/transactionsColumns";
 
 export default async function Page() {
@@ -30,26 +31,32 @@ export default async function Page() {
     <>
       <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div className="flex items-center gap-2 px-4 w-full">
-          <div className="flex flex-row items-center w-full justify-between">
-            <h1 className="font-bold text-xl tracking-tighter">Transactions</h1>
+          <div className="w-full">
+            <div className="flex flex-row items-center w-full justify-between mb-2">
+              <h1 className="font-bold text-xl tracking-tighter">
+                Transactions
+              </h1>
 
-            <Drawer>
-              <DrawerTrigger>
-                <Button variant={"outline"} size={"icon"}>
-                  <Plus size={24} />
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent>
-                <div className="mx-auto w-full max-w-xl">
-                  <DrawerHeader>
-                    <DrawerTitle>Add a new transaction</DrawerTitle>
-                  </DrawerHeader>
-                  <DrawerFooter className="flex justify-center items-center">
-                    <TransactionForm transactions={userTransactions} />
-                  </DrawerFooter>
-                </div>
-              </DrawerContent>
-            </Drawer>
+              <Drawer>
+                <DrawerTrigger>
+                  <Button variant={"outline"} size={"icon"}>
+                    <Plus size={24} />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="mx-auto w-full max-w-xl">
+                    <DrawerHeader>
+                      <DrawerTitle>Add a new transaction</DrawerTitle>
+                    </DrawerHeader>
+                    <DrawerFooter className="flex justify-center items-center">
+                      <TransactionForm />
+                    </DrawerFooter>
+                  </div>
+                </DrawerContent>
+              </Drawer>
+            </div>
+
+            <Separator />
           </div>
         </div>
       </header>
