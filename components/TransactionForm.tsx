@@ -27,6 +27,7 @@ import { DrawerClose } from "./ui/drawer";
 import useCurrencyStore from "@/store/useCurrencyStore";
 import { currencies } from "@/lib/currencies";
 import { getCurrencySymbol } from "@/helpers/getCurrency";
+import useTransactionsDrawer from "@/store/useTransactionDrawer";
 
 const FormSchema = z.object({
   name: z.string({
@@ -45,7 +46,9 @@ const FormSchema = z.object({
 
 export function TransactionForm() {
   const { currency } = useCurrencyStore();
+  const { setOpenState } = useTransactionsDrawer();
   const [chosenAmount, setChosenAmount] = React.useState(10);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -63,6 +66,9 @@ export function TransactionForm() {
     formData.append("type", data.type);
     formData.append("amount", chosenAmount.toString());
     createTransactions(formData);
+    setOpenState(false);
+    setChosenAmount(10);
+    form.reset();
   }
 
   function onClick(adjustment: number) {
@@ -170,7 +176,7 @@ export function TransactionForm() {
         <Button type="submit" className="w-full">
           Submit
         </Button>
-        <DrawerClose className="w-full">
+        <DrawerClose className="w-full" onClick={() => setOpenState(false)}>
           <Button variant="outline" className="w-full" type="button">
             Cancel
           </Button>

@@ -1,31 +1,54 @@
-import { TransactionForm } from "@/components/TransactionForm";
-import { Button } from "@/components/ui/button";
+"use client";
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
-import { auth } from "@clerk/nextjs/server";
+// import { auth } from "@clerk/nextjs/server";
+import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
-import { Plus } from "lucide-react";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { DataTable } from "@/components/TransactionsTable";
 import { Separator } from "@/components/ui/separator";
 import { transactionsColumns } from "@/lib/transactionsColumns";
+import TransactionDrawer from "@/components/TransactionDrawer";
+import { useEffect, useState } from "react";
 
-export default async function Page() {
-  const { userId }: { userId: string | null } = await auth();
+export default function Page() {
+  const { user } = useUser();
 
-  if (!userId) return null;
+  const [userTransactions, setUserTransactions] = useState<
+    {
+      userId: string | null;
+      id: number;
+      name: string | null;
+      type: string | null;
+      amount: string | null;
+      description: string | null;
+    }[]
+  >([]);
+  // const fetchTransactions = async () => {
+  //   if (user?.id) {
+  //     const userTransactions = await db
+  //       .select()
+  //       .from(transactions)
+  //       .where(eq(transactions.userId, user.id));
+  //     setUserTransactions(userTransactions);
+  //   }
+  //   setUserTransactions([]);
+  // };
+  // useEffect(() => {
+  //   const fetchTransactions = async () => {
+  //     if (user?.id) {
+  //       const userTransactions = await db
+  //         .select()
+  //         .from(transactions)
+  //         .where(eq(transactions.userId, user.id));
+  //       setUserTransactions(userTransactions);
+  //     }
+  //     setUserTransactions([]);
+  //   };
 
-  const userTransactions = await db
-    .select()
-    .from(transactions)
-    .where(eq(transactions.userId, userId));
+  //   fetchTransactions();
+  // }, [user]);
+
+  if (!user?.id) return null;
 
   return (
     <>
@@ -36,33 +59,15 @@ export default async function Page() {
               <h1 className="font-bold text-xl tracking-tighter">
                 Transactions
               </h1>
-
-              <Drawer>
-                <DrawerTrigger>
-                  <Button variant={"outline"} size={"icon"}>
-                    <Plus size={24} />
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <div className="mx-auto w-full max-w-xl">
-                    <DrawerHeader>
-                      <DrawerTitle>Add a new transaction</DrawerTitle>
-                    </DrawerHeader>
-                    <DrawerFooter className="flex justify-center items-center">
-                      <TransactionForm />
-                    </DrawerFooter>
-                  </div>
-                </DrawerContent>
-              </Drawer>
+              <TransactionDrawer />
             </div>
-
             <Separator />
           </div>
         </div>
       </header>
       <div className="flex flex-col justify-center items-center">
         <div className="mt-5 w-full">
-          <DataTable columns={transactionsColumns} data={userTransactions} />
+          {/* <DataTable columns={transactionsColumns} data={userTransactions} /> */}
         </div>
       </div>
     </>
