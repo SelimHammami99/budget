@@ -26,7 +26,7 @@ import { Minus, Plus } from "lucide-react";
 import { DrawerClose } from "./ui/drawer";
 import useCurrencyStore from "@/store/useCurrencyStore";
 import { currencies } from "@/lib/currencies";
-import { getCurrencySymbol } from "@/helpers/getCurrencySymbol";
+import { getCurrencySymbol } from "@/helpers/getCurrency";
 
 const FormSchema = z.object({
   name: z.string({
