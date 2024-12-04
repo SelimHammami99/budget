@@ -116,7 +116,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <SignOutButton>
-                <div className="flex flex-row items-center justify-center gap-2">
+                <div className="flex flex-row items-center  gap-2 w-full">
                   <LogOut />
                   Log out
                 </div>

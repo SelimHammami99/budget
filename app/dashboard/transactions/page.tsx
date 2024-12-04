@@ -1,21 +1,11 @@
-import { TransactionForm } from "@/components/TransactionForm";
-import { Button } from "@/components/ui/button";
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
-import { Plus } from "lucide-react";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { DataTable } from "@/components/TransactionsTable";
 import { Separator } from "@/components/ui/separator";
 import { transactionsColumns } from "@/lib/transactionsColumns";
+import TransactionDrawer from "@/components/TransactionDrawer";
 
 export default async function Page() {
   const { userId }: { userId: string | null } = await auth();
@@ -36,26 +26,8 @@ export default async function Page() {
               <h1 className="font-bold text-xl tracking-tighter">
                 Transactions
               </h1>
-
-              <Drawer>
-                <DrawerTrigger>
-                  <Button variant={"outline"} size={"icon"}>
-                    <Plus size={24} />
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <div className="mx-auto w-full max-w-xl">
-                    <DrawerHeader>
-                      <DrawerTitle>Add a new transaction</DrawerTitle>
-                    </DrawerHeader>
-                    <DrawerFooter className="flex justify-center items-center">
-                      <TransactionForm />
-                    </DrawerFooter>
-                  </div>
-                </DrawerContent>
-              </Drawer>
+              <TransactionDrawer />
             </div>
-
             <Separator />
           </div>
         </div>
