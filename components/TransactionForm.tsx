@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createTransactions } from "@/actions/createTransaction";
 import { Textarea } from "./ui/textarea";
 import {
   Select,
@@ -28,6 +27,9 @@ import useCurrencyStore from "@/store/useCurrencyStore";
 import { currencies } from "@/lib/currencies";
 import { getCurrencySymbol } from "@/helpers/getCurrency";
 import useTransactionsDrawer from "@/store/useTransactionDrawer";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 
 const FormSchema = z.object({
   name: z.string({
@@ -48,6 +50,8 @@ export function TransactionForm() {
   const { currency } = useCurrencyStore();
   const { setOpenState } = useTransactionsDrawer();
   const [chosenAmount, setChosenAmount] = React.useState(10);
+  const createTransaction = useMutation(api.transaction.createTransaction);
+  const { user } = useUser();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -65,7 +69,13 @@ export function TransactionForm() {
     formData.append("description", data.description);
     formData.append("type", data.type);
     formData.append("amount", chosenAmount.toString());
-    createTransactions(formData);
+    createTransaction({
+      name: data.name,
+      description: data.description,
+      type: data.type,
+      amount: chosenAmount.toString(),
+      userId: user?.id || "",
+    });
     setOpenState(false);
     setChosenAmount(10);
     form.reset();

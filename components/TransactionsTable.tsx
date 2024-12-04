@@ -38,7 +38,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function TransactionTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -111,7 +111,7 @@ export function DataTable<TData, TValue>({
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {getTypes(data).map((type) => (
+                {getTypes(data)?.map((type) => (
                   <SelectItem value={type} key={type}>
                     {type}
                   </SelectItem>
