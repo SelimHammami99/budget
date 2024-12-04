@@ -1,54 +1,21 @@
-"use client";
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
-// import { auth } from "@clerk/nextjs/server";
-import { useUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { DataTable } from "@/components/TransactionsTable";
 import { Separator } from "@/components/ui/separator";
 import { transactionsColumns } from "@/lib/transactionsColumns";
 import TransactionDrawer from "@/components/TransactionDrawer";
-import { useEffect, useState } from "react";
 
-export default function Page() {
-  const { user } = useUser();
+export default async function Page() {
+  const { userId }: { userId: string | null } = await auth();
 
-  const [userTransactions, setUserTransactions] = useState<
-    {
-      userId: string | null;
-      id: number;
-      name: string | null;
-      type: string | null;
-      amount: string | null;
-      description: string | null;
-    }[]
-  >([]);
-  // const fetchTransactions = async () => {
-  //   if (user?.id) {
-  //     const userTransactions = await db
-  //       .select()
-  //       .from(transactions)
-  //       .where(eq(transactions.userId, user.id));
-  //     setUserTransactions(userTransactions);
-  //   }
-  //   setUserTransactions([]);
-  // };
-  // useEffect(() => {
-  //   const fetchTransactions = async () => {
-  //     if (user?.id) {
-  //       const userTransactions = await db
-  //         .select()
-  //         .from(transactions)
-  //         .where(eq(transactions.userId, user.id));
-  //       setUserTransactions(userTransactions);
-  //     }
-  //     setUserTransactions([]);
-  //   };
+  if (!userId) return null;
 
-  //   fetchTransactions();
-  // }, [user]);
-
-  if (!user?.id) return null;
+  const userTransactions = await db
+    .select()
+    .from(transactions)
+    .where(eq(transactions.userId, userId));
 
   return (
     <>
@@ -67,7 +34,7 @@ export default function Page() {
       </header>
       <div className="flex flex-col justify-center items-center">
         <div className="mt-5 w-full">
-          {/* <DataTable columns={transactionsColumns} data={userTransactions} /> */}
+          <DataTable columns={transactionsColumns} data={userTransactions} />
         </div>
       </div>
     </>
