@@ -1,12 +1,14 @@
-interface DataRow {
-  type: string;
-  id: string;
+interface TData {
+  _id: string;
   name: string;
+  description: string;
+  type: string;
   amount: string;
+  userId: string;
 }
 
-export const getTypes = (data: DataRow[]) => {
-  const allTypes = data.map((row: DataRow) => row.type);
+export const getTypes = (data: TData[]) => {
+  const allTypes = data.map((row: TData) => row.type);
   const uniqueTypes = Array.from(new Set(allTypes));
   return uniqueTypes;
 };

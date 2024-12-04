@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ConvexClientProvider } from "./ConvexClientProvider";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
 
@@ -28,7 +29,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <ConvexClientProvider>{children}</ConvexClientProvider>
             <Toaster />
           </ThemeProvider>
         </body>

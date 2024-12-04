@@ -1,21 +1,13 @@
-import { db } from "@/db";
-import { transactions } from "@/db/schema";
-import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
-import { DataTable } from "@/components/TransactionsTable";
+"use client";
+import { TransactionTable } from "@/components/TransactionsTable";
 import { Separator } from "@/components/ui/separator";
 import { transactionsColumns } from "@/lib/transactionsColumns";
 import TransactionDrawer from "@/components/TransactionDrawer";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
-export default async function Page() {
-  const { userId }: { userId: string | null } = await auth();
-
-  if (!userId) return null;
-
-  const userTransactions = await db
-    .select()
-    .from(transactions)
-    .where(eq(transactions.userId, userId));
+export default function Page() {
+  const transactions = useQuery(api.transaction.getTransactions);
 
   return (
     <>
@@ -34,7 +26,18 @@ export default async function Page() {
       </header>
       <div className="flex flex-col justify-center items-center">
         <div className="mt-5 w-full">
-          <DataTable columns={transactionsColumns} data={userTransactions} />
+          {transactions && (
+            <TransactionTable
+              columns={transactionsColumns}
+              data={transactions.map((transaction) => ({
+                id: transaction._id,
+                name: transaction.name,
+                type: transaction.type,
+                amount: transaction.amount,
+                description: transaction.description,
+              }))}
+            />
+          )}
         </div>
       </div>
     </>
