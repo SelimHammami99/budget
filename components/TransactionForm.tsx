@@ -48,17 +48,20 @@ const FormSchema = z.object({
   amount: z.string({
     required_error: "Please choose an amount.",
   }),
-  date: z.date({
+  date: z.string({
     required_error: "Please choose a date.",
   }),
 });
 
 export function TransactionForm() {
   const { currency } = useCurrencyStore();
-  const { setOpenState } = useTransactionsDrawer();
-  const [chosenAmount, setChosenAmount] = React.useState(10);
-  const createTransaction = useMutation(api.transaction.createTransaction);
   const { user } = useUser();
+  const { setOpenState } = useTransactionsDrawer();
+
+  const [chosenAmount, setChosenAmount] = React.useState(10);
+  const [chosenDate, setChosenDate] = React.useState<Date | undefined>();
+
+  const createTransaction = useMutation(api.transaction.createTransaction);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -67,7 +70,7 @@ export function TransactionForm() {
       description: "",
       type: "",
       amount: "",
-      date: new Date().toISOString(),
+      date: chosenDate ? format(chosenDate, "PPP") : "",
     },
   });
 
@@ -83,7 +86,7 @@ export function TransactionForm() {
       type: data.type,
       amount: chosenAmount.toString(),
       userId: user?.id || "",
-      date: new Date().toISOString(),
+      date: chosenDate ? format(chosenDate, "PPP") : "",
     });
     setOpenState(false);
     setChosenAmount(10);
@@ -93,6 +96,8 @@ export function TransactionForm() {
   function onClick(adjustment: number) {
     setChosenAmount(Math.max(10, Math.min(10000, chosenAmount + adjustment)));
   }
+
+  console.log(chosenDate);
 
   return (
     <Form {...form}>
@@ -151,7 +156,7 @@ export function TransactionForm() {
         <FormField
           control={form.control}
           name="date"
-          render={({ field }) => (
+          render={() => (
             <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>
               <Popover>
@@ -162,11 +167,11 @@ export function TransactionForm() {
                       type="button"
                       className={cn(
                         "pl-3 text-left font-normal w-full",
-                        !field.value && "text-muted-foreground"
+                        chosenDate && "text-muted-foreground"
                       )}
                     >
-                      {field.value ? (
-                        format(field.value, "PPP")
+                      {chosenDate ? (
+                        format(chosenDate!, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
@@ -177,8 +182,8 @@ export function TransactionForm() {
                 <PopoverContent className="w-auto p-0" align="center">
                   <Calendar
                     mode="single"
-                    selected={field.value ? new Date(field.value) : undefined}
-                    onSelect={field.onChange}
+                    selected={chosenDate}
+                    onSelect={setChosenDate}
                     initialFocus
                   />
                 </PopoverContent>

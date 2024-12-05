@@ -7,7 +7,6 @@ import { ArrowUpDown } from "lucide-react";
 import useCurrencyStore from "@/store/useCurrencyStore";
 import { getCurrencyCountry } from "@/helpers/getCurrency";
 import { currencies } from "./currencies";
-import { format } from "date-fns";
 
 export type Transaction = {
   id: string;
@@ -115,7 +114,7 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{format(row.original.date, "PPP")}</div>;
+      return <div>{row.original.date}</div>;
     },
   },
 ];
