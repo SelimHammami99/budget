@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Minus, Plus } from "lucide-react";
+import { CalendarIcon, Minus, Plus } from "lucide-react";
 import { DrawerClose } from "./ui/drawer";
 import useCurrencyStore from "@/store/useCurrencyStore";
 import { currencies } from "@/lib/currencies";
@@ -30,6 +30,10 @@ import useTransactionsDrawer from "@/store/useTransactionDrawer";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
 
 const FormSchema = z.object({
   name: z.string({
@@ -43,6 +47,9 @@ const FormSchema = z.object({
   }),
   amount: z.string({
     required_error: "Please choose an amount.",
+  }),
+  date: z.date({
+    required_error: "Please choose a date.",
   }),
 });
 
@@ -60,6 +67,7 @@ export function TransactionForm() {
       description: "",
       type: "",
       amount: "",
+      date: new Date().toISOString(),
     },
   });
 
@@ -75,6 +83,7 @@ export function TransactionForm() {
       type: data.type,
       amount: chosenAmount.toString(),
       userId: user?.id || "",
+      date: new Date().toISOString(),
     });
     setOpenState(false);
     setChosenAmount(10);
@@ -135,6 +144,45 @@ export function TransactionForm() {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      type="button"
+                      className={cn(
+                        "pl-3 text-left font-normal w-full",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="center">
+                  <Calendar
+                    mode="single"
+                    selected={field.value ? new Date(field.value) : undefined}
+                    onSelect={field.onChange}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}

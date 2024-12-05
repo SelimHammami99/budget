@@ -7,6 +7,7 @@ import { ArrowUpDown } from "lucide-react";
 import useCurrencyStore from "@/store/useCurrencyStore";
 import { getCurrencyCountry } from "@/helpers/getCurrency";
 import { currencies } from "./currencies";
+import { format } from "date-fns";
 
 export type Transaction = {
   id: string;
@@ -14,6 +15,7 @@ export type Transaction = {
   type: string;
   amount: string;
   description: string;
+  date: string;
 };
 
 export const transactionsColumns: ColumnDef<Transaction>[] = [
@@ -97,6 +99,23 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
           {formatted}
         </Badge>
       );
+    },
+  },
+  {
+    accessorKey: "date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div>{format(row.original.date, "PPP")}</div>;
     },
   },
 ];

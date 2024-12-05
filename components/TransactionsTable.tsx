@@ -146,6 +146,23 @@ export function TransactionTable<TData, TValue>({
             <XIcon size={24} />
           </Button>
         </div>
+        <div className="flex flex-row gap-2 w-full">
+          <Input
+            placeholder="Filter date..."
+            value={(table.getColumn("date")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("date")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => table.getColumn("date")?.setFilterValue("")}
+          >
+            <XIcon size={24} />
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

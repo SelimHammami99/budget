@@ -35,6 +35,7 @@ export default function Page() {
                 type: transaction.type,
                 amount: transaction.amount,
                 description: transaction.description,
+                date: transaction.date,
               }))}
             />
           )}

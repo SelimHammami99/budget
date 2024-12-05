@@ -8,6 +8,7 @@ export const createTransaction = mutation({
     type: v.string(),
     amount: v.string(),
     userId: v.string(),
+    date: v.string(),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("transactions", {
@@ -15,6 +16,7 @@ export const createTransaction = mutation({
       description: args.description,
       type: args.type,
       amount: args.amount,
+      date: args.date,
       userId: args.userId,
     });
   },
