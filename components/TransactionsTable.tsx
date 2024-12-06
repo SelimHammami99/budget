@@ -32,6 +32,11 @@ import {
 import { getTypes } from "@/helpers/getTypes";
 import { Button } from "./ui/button";
 import { XIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { addDays, format } from "date-fns";
+import { Calendar } from "./ui/calendar";
+import { DateRange } from "react-day-picker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,6 +63,10 @@ export function TransactionTable<TData, TValue>({
       sorting,
       columnFilters,
     },
+  });
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 20),
   });
 
   return (
@@ -147,15 +156,43 @@ export function TransactionTable<TData, TValue>({
           </Button>
         </div>
         <div className="flex flex-row gap-2 w-full">
-          <Input
-            placeholder="Filter date..."
-            value={(table.getColumn("date")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("date")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          <Popover>
+            <PopoverTrigger asChild disabled>
+              <Button
+                id="date"
+                variant={"outline"}
+                className={cn(
+                  "justify-center text-center font-normal",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                {date?.from ? (
+                  date.to ? (
+                    <>
+                      {format(date.from, "LLL dd, y")} -{" "}
+                      {format(date.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(date.from, "LLL dd, y")
+                  )
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={setDate}
+                numberOfMonths={2}
+              />
+            </PopoverContent>
+          </Popover>
           <Button
+            disabled
             variant={"outline"}
             size={"icon"}
             onClick={() => table.getColumn("date")?.setFilterValue("")}
