@@ -7,6 +7,7 @@ export default defineSchema({
     description: v.string(),
     name: v.string(),
     type: v.string(),
+    date: v.string(),
     userId: v.optional(v.string()),
   }),
 });

@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Minus, Plus } from "lucide-react";
+import { CalendarIcon, Minus, Plus } from "lucide-react";
 import { DrawerClose } from "./ui/drawer";
 import useCurrencyStore from "@/store/useCurrencyStore";
 import { currencies } from "@/lib/currencies";
@@ -30,6 +30,10 @@ import useTransactionsDrawer from "@/store/useTransactionDrawer";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
 
 const FormSchema = z.object({
   name: z.string({
@@ -44,14 +48,20 @@ const FormSchema = z.object({
   amount: z.string({
     required_error: "Please choose an amount.",
   }),
+  date: z.string({
+    required_error: "Please choose a date.",
+  }),
 });
 
 export function TransactionForm() {
   const { currency } = useCurrencyStore();
-  const { setOpenState } = useTransactionsDrawer();
-  const [chosenAmount, setChosenAmount] = React.useState(10);
-  const createTransaction = useMutation(api.transaction.createTransaction);
   const { user } = useUser();
+  const { setOpenState } = useTransactionsDrawer();
+
+  const [chosenAmount, setChosenAmount] = React.useState(10);
+  const [chosenDate, setChosenDate] = React.useState<Date | undefined>();
+
+  const createTransaction = useMutation(api.transaction.createTransaction);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,6 +70,7 @@ export function TransactionForm() {
       description: "",
       type: "",
       amount: "",
+      date: chosenDate ? format(chosenDate, "PPP") : "",
     },
   });
 
@@ -75,6 +86,7 @@ export function TransactionForm() {
       type: data.type,
       amount: chosenAmount.toString(),
       userId: user?.id || "",
+      date: chosenDate ? format(chosenDate, "PPP") : "",
     });
     setOpenState(false);
     setChosenAmount(10);
@@ -84,6 +96,8 @@ export function TransactionForm() {
   function onClick(adjustment: number) {
     setChosenAmount(Math.max(10, Math.min(10000, chosenAmount + adjustment)));
   }
+
+  console.log(chosenDate);
 
   return (
     <Form {...form}>
@@ -135,6 +149,45 @@ export function TransactionForm() {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="date"
+          render={() => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      type="button"
+                      className={cn(
+                        "pl-3 text-left font-normal w-full",
+                        chosenDate && "text-muted-foreground"
+                      )}
+                    >
+                      {chosenDate ? (
+                        format(chosenDate!, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="center">
+                  <Calendar
+                    mode="single"
+                    selected={chosenDate}
+                    onSelect={setChosenDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
