@@ -27,3 +27,12 @@ export const getTransactions = query({
     return ctx.db.query("transactions").collect();
   },
 });
+
+export const deleteTransaction = mutation({
+  args: {
+    id: v.id("transactions"),
+  },
+  handler: async (ctx, { id }) => {
+    await ctx.db.delete(id);
+  },
+});

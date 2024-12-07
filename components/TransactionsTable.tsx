@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   ColumnFiltersState,
+  RowSelectionState,
 } from "@tanstack/react-table";
 
 import {
@@ -37,6 +38,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { addDays, format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import { DateRange } from "react-day-picker";
+import useSelectedTransactions from "@/store/useSelectedTransactions";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,6 +53,14 @@ export function TransactionTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const { setSelectedTransactions } = useSelectedTransactions();
+
+  React.useEffect(
+    () => setSelectedTransactions(rowSelection),
+    [rowSelection, setSelectedTransactions]
+  );
+
   const table = useReactTable({
     data,
     columns,
@@ -59,9 +69,12 @@ export function TransactionTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
+    getRowId: (row) => row.id,
     state: {
       sorting,
       columnFilters,
+      rowSelection,
     },
   });
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -250,6 +263,12 @@ export function TransactionTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
       </div>
     </div>
   );

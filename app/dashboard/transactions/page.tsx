@@ -3,24 +3,46 @@ import { TransactionTable } from "@/components/TransactionsTable";
 import { Separator } from "@/components/ui/separator";
 import { transactionsColumns } from "@/lib/transactionsColumns";
 import TransactionDrawer from "@/components/TransactionDrawer";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import useSelectedTransactions from "@/store/useSelectedTransactions";
 
 export default function Page() {
   const transactions = useQuery(api.transaction.getTransactions);
+  const { selectedTransactions } = useSelectedTransactions();
+  const deleteTransaction = useMutation(api.transaction.deleteTransaction);
+  console.log(transactions);
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 mt-9">
         <div className="flex items-center gap-2 px-4 w-full">
           <div className="w-full">
             <div className="flex flex-row items-center w-full justify-between mb-2">
               <h1 className="font-bold text-xl tracking-tighter">
                 Transactions
               </h1>
-              <TransactionDrawer />
             </div>
             <Separator />
+            <div className="flex flex-row items-center w-full justify-end mt-2 gap-2">
+              <Button
+                size={"icon"}
+                onClick={() =>
+                  deleteTransaction({
+                    id: Object.keys(selectedTransactions)[0],
+                  })
+                }
+                variant={"destructive"}
+                disabled={
+                  Object.keys(selectedTransactions).length === 0 ? true : false
+                }
+              >
+                <Trash2 />
+              </Button>
+              <TransactionDrawer />
+            </div>
           </div>
         </div>
       </header>
