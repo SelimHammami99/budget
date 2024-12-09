@@ -93,13 +93,16 @@ export function TransactionForm() {
     form.reset();
   }
 
-  function onClick(adjustment: number) {
+  function onAmountClick(adjustment: number) {
     setChosenAmount(Math.max(10, Math.min(10000, chosenAmount + adjustment)));
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-6 mt-5"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -203,7 +206,7 @@ export function TransactionForm() {
                       variant="outline"
                       size="icon"
                       className="h-8 w-8 shrink-0 rounded-full"
-                      onClick={() => onClick(-10)}
+                      onClick={() => onAmountClick(-10)}
                       disabled={chosenAmount <= 10}
                       type="button"
                     >
@@ -219,7 +222,7 @@ export function TransactionForm() {
                       variant="outline"
                       size="icon"
                       className="h-8 w-8 shrink-0 rounded-full"
-                      onClick={() => onClick(10)}
+                      onClick={() => onAmountClick(10)}
                       disabled={chosenAmount >= 10000}
                       type="button"
                     >
@@ -233,15 +236,16 @@ export function TransactionForm() {
             </FormItem>
           )}
         />
-
-        <Button type="submit" className="w-full">
-          Submit
-        </Button>
-        <DrawerClose className="w-full" onClick={() => setOpenState(false)}>
-          <Button variant="outline" className="w-full" type="button">
-            Cancel
+        <div className="flex flex-row gap-4">
+          <Button type="submit" className="w-full">
+            Submit
           </Button>
-        </DrawerClose>
+          <DrawerClose className="w-full" onClick={() => setOpenState(false)}>
+            <Button variant="outline" className="w-full" type="button">
+              Cancel
+            </Button>
+          </DrawerClose>
+        </div>
       </form>
     </Form>
   );
