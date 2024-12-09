@@ -88,6 +88,7 @@ export function TransactionTable<TData, TValue>({
       <div className="flex items-center py-4 gap-4">
         <div className="flex flex-row gap-2 w-full">
           <Input
+            disabled={!data.length}
             placeholder="Filter names..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
@@ -96,6 +97,7 @@ export function TransactionTable<TData, TValue>({
             className="max-w-sm"
           />
           <Button
+            disabled={!data.length}
             variant={"outline"}
             size={"icon"}
             onClick={() => table.getColumn("name")?.setFilterValue("")}
@@ -105,6 +107,7 @@ export function TransactionTable<TData, TValue>({
         </div>
         <div className="flex flex-row gap-2 w-full">
           <Input
+            disabled={!data.length}
             placeholder="Filter description..."
             value={
               (table.getColumn("description")?.getFilterValue() as string) ?? ""
@@ -115,6 +118,7 @@ export function TransactionTable<TData, TValue>({
             className="max-w-sm"
           />
           <Button
+            disabled={!data.length}
             variant={"outline"}
             size={"icon"}
             onClick={() => table.getColumn("description")?.setFilterValue("")}
@@ -124,12 +128,13 @@ export function TransactionTable<TData, TValue>({
         </div>
         <div className="flex flex-row gap-2 w-full">
           <Select
+            disabled={!data.length}
             onValueChange={(value) =>
               table.getColumn("type")?.setFilterValue(value)
             }
             value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-white/70">
               <SelectValue placeholder="Filter type..." />
             </SelectTrigger>
             <SelectContent>
@@ -143,6 +148,7 @@ export function TransactionTable<TData, TValue>({
             </SelectContent>
           </Select>
           <Button
+            disabled={!data.length}
             variant={"outline"}
             size={"icon"}
             onClick={() => table.getColumn("type")?.setFilterValue("")}
@@ -152,6 +158,7 @@ export function TransactionTable<TData, TValue>({
         </div>
         <div className="flex flex-row gap-2 w-full">
           <Input
+            disabled={!data.length}
             placeholder="Filter amount..."
             value={
               (table.getColumn("amount")?.getFilterValue() as string) ?? ""
@@ -162,6 +169,7 @@ export function TransactionTable<TData, TValue>({
             className="max-w-sm"
           />
           <Button
+            disabled={!data.length}
             variant={"outline"}
             size={"icon"}
             onClick={() => table.getColumn("amount")?.setFilterValue("")}
