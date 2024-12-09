@@ -6,7 +6,7 @@ import TransactionDrawer from "@/components/TransactionDrawer";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Filter, Trash2 } from "lucide-react";
 import useSelectedTransactions from "@/store/useSelectedTransactions";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ export default function Page() {
     useSelectedTransactions();
   const deleteTransaction = useMutation(api.transaction.deleteTransaction);
   const [disabled, setDisabled] = useState(true);
+  const [showFilter, setShowFilter] = useState(false);
 
   const deleteTransactionHandler = () => {
     deleteTransaction({
@@ -50,6 +51,15 @@ export default function Page() {
                 <Trash2 />
               </Button>
               <TransactionDrawer />
+              {transactions?.length !== 0 && (
+                <Button
+                  size={"icon"}
+                  onClick={() => setShowFilter(!showFilter)}
+                  variant={"outline"}
+                >
+                  <Filter />
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -67,6 +77,7 @@ export default function Page() {
                 description: transaction.description,
                 date: transaction.date,
               }))}
+              showFilter={showFilter}
             />
           )}
         </div>
