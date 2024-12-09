@@ -97,8 +97,6 @@ export function TransactionForm() {
     setChosenAmount(Math.max(10, Math.min(10000, chosenAmount + adjustment)));
   }
 
-  console.log(chosenDate);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">

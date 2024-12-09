@@ -8,12 +8,22 @@ import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import useSelectedTransactions from "@/store/useSelectedTransactions";
+import { useState } from "react";
 
 export default function Page() {
   const transactions = useQuery(api.transaction.getTransactions);
-  const { selectedTransactions } = useSelectedTransactions();
+  const { selectedTransactions, setSelectedTransactions } =
+    useSelectedTransactions();
   const deleteTransaction = useMutation(api.transaction.deleteTransaction);
-  console.log(transactions);
+  const [disabled, setDisabled] = useState(true);
+
+  const deleteTransactionsHandler = () => {
+    deleteTransaction({
+      id: Object.keys(selectedTransactions)[0],
+    });
+    setDisabled(true);
+    setSelectedTransactions({});
+  };
 
   return (
     <>
@@ -29,14 +39,12 @@ export default function Page() {
             <div className="flex flex-row items-center w-full justify-end mt-2 gap-2">
               <Button
                 size={"icon"}
-                onClick={() =>
-                  deleteTransaction({
-                    id: Object.keys(selectedTransactions)[0],
-                  })
-                }
+                onClick={deleteTransactionsHandler}
                 variant={"destructive"}
                 disabled={
-                  Object.keys(selectedTransactions).length === 0 ? true : false
+                  Object.keys(selectedTransactions).length === 0
+                    ? true
+                    : false && disabled
                 }
               >
                 <Trash2 />
