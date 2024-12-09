@@ -17,7 +17,7 @@ export default function Page() {
   const deleteTransaction = useMutation(api.transaction.deleteTransaction);
   const [disabled, setDisabled] = useState(true);
 
-  const deleteTransactionsHandler = () => {
+  const deleteTransactionHandler = () => {
     deleteTransaction({
       id: Object.keys(selectedTransactions)[0],
     });
@@ -39,7 +39,7 @@ export default function Page() {
             <div className="flex flex-row items-center w-full justify-end mt-2 gap-2">
               <Button
                 size={"icon"}
-                onClick={deleteTransactionsHandler}
+                onClick={deleteTransactionHandler}
                 variant={"destructive"}
                 disabled={
                   Object.keys(selectedTransactions).length === 0
