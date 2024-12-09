@@ -3,11 +3,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, SquareArrowOutUpRight } from "lucide-react";
 import useCurrencyStore from "@/store/useCurrencyStore";
+import useTransactionsDrawer from "@/store/useTransactionDrawer";
+import useEditableTransaction from "@/store/useEditableTransaction";
 import { getCurrencyCountry } from "@/helpers/getCurrency";
 import { currencies } from "./currencies";
 import { Checkbox } from "@/components/ui/checkbox";
+import { format } from "date-fns";
+import useTransactionMode from "@/store/useTransactionMode";
 
 export type Transaction = {
   id: string;
@@ -139,7 +143,32 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.original.date}</div>;
+      return <div>{format(row.original.date, "PPP")}</div>;
+    },
+  },
+  {
+    id: "update",
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { setOpenState } = useTransactionsDrawer();
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { setEditableTransaction } = useEditableTransaction();
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { setMode } = useTransactionMode();
+
+      return (
+        <Button
+          size={"icon"}
+          variant={"ghost"}
+          onClick={() => {
+            setOpenState(true);
+            setEditableTransaction(row.original);
+            setMode("update");
+          }}
+        >
+          <SquareArrowOutUpRight />
+        </Button>
+      );
     },
   },
 ];

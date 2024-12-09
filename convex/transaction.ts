@@ -22,6 +22,28 @@ export const createTransaction = mutation({
   },
 });
 
+export const updateTransaction = mutation({
+  args: {
+    id: v.id("transactions"),
+    userId: v.string(),
+    name: v.string(),
+    description: v.string(),
+    type: v.string(),
+    amount: v.string(),
+    date: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      name: args.name,
+      description: args.description,
+      type: args.type,
+      amount: args.amount,
+      date: args.date,
+      userId: args.userId,
+    });
+  },
+});
+
 export const getTransactions = query({
   handler: async (ctx) => {
     return ctx.db.query("transactions").collect();

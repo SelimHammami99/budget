@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import useTransactionsDrawer from "@/store/useTransactionDrawer";
+import useEditableTransaction from "@/store/useEditableTransaction";
 
 const Sheet = SheetPrimitive.Root;
 
@@ -59,6 +60,20 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(({ side = "right", className, children, ...props }, ref) => {
   const { setOpenState } = useTransactionsDrawer();
+  const { setEditableTransaction } = useEditableTransaction();
+
+  const onClose = () => {
+    setOpenState(false);
+    setEditableTransaction({
+      id: "",
+      name: "",
+      description: "",
+      type: "",
+      amount: "",
+      date: "",
+    });
+  };
+
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -69,7 +84,7 @@ const SheetContent = React.forwardRef<
       >
         {children}
         <button
-          onClick={() => setOpenState(false)}
+          onClick={onClose}
           className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary mt-3"
         >
           <X className="h-4 w-4" />
