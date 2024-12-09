@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -35,22 +35,29 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 
-const FormSchema = z.object({
-  name: z.string({
-    required_error: "Please enter a name.",
-  }),
-  description: z.string({
-    required_error: "Please enter a description.",
-  }),
-  type: z.string({
-    required_error: "Please select a type.",
-  }),
-  amount: z.string({
-    required_error: "Please choose an amount.",
-  }),
-  date: z.string({
-    required_error: "Please choose a date.",
-  }),
+interface FormData {
+  name: string;
+  description: string;
+  type: string;
+  amount: string;
+  date: string;
+}
+
+interface TransactionData {
+  name: string;
+  description: string;
+  type: string;
+  amount: string;
+  userId: string;
+  date: string;
+}
+
+const FormSchema = yup.object({
+  name: yup.string().required("Name is required"),
+  description: yup.string().required("Description is required"),
+  type: yup.string().required("Type is required"),
+  amount: yup.string().required("Amount is required"),
+  date: yup.string().required("Date is required"),
 });
 
 export function TransactionForm() {
@@ -63,18 +70,18 @@ export function TransactionForm() {
 
   const createTransaction = useMutation(api.transaction.createTransaction);
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm({
+    resolver: yupResolver(FormSchema),
     defaultValues: {
       name: "",
       description: "",
       type: "",
-      amount: "",
-      date: chosenDate ? format(chosenDate, "PPP") : "",
+      amount: chosenAmount.toString(),
+      date: format(Date(), "PPP"),
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(data: FormData) {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
@@ -87,7 +94,7 @@ export function TransactionForm() {
       amount: chosenAmount.toString(),
       userId: user?.id || "",
       date: chosenDate ? format(chosenDate, "PPP") : "",
-    });
+    } as TransactionData);
     setOpenState(false);
     setChosenAmount(10);
     form.reset();
